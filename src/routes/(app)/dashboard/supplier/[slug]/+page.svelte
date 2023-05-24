@@ -115,7 +115,7 @@ const updateSupplier = async () => {
                       
                     <div class="flex justify-between">
                       
-                      <button class="btn btn-info  text-white bg-gray-500 mt-4" on:click={() => goto('/dashboard')}>Kembali</button>
+                      <a class="btn btn-info  text-white bg-gray-500 mt-4" href="/dashboard">Kembali</a>
                       <button class="btn btn-info  text-white bg-sky-700 mt-4" on:click={() => goto('/dashboard')}>Update</button>
                     </div>
                     </form>  
