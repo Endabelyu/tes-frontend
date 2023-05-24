@@ -1,6 +1,9 @@
 <script>
+// @ts-nocheck
+
 import { goto } from '$app/navigation';
 import Swal from 'sweetalert2';
+import { onMount } from 'svelte';
 
 let results= '';
     let unRegister = false,
@@ -8,7 +11,12 @@ let results= '';
     profile= '',
     password='',
 	 url_api = import.meta.env.VITE_API_DIGITAL,
-   tokens= localStorage.getItem('token'),
+   tokens= '';
+
+   onMount(async () => {
+   tokens= localStorage.getItem('token')
+
+   })
 
 
    if(tokens){

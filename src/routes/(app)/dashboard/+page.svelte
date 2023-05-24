@@ -28,6 +28,7 @@ onMount(async () => {
 })
 let    url_api = import.meta.env.VITE_API_DIGITAL
 
+// get all item data  
 const getData = async () => {
 		fetch(`${url_api}/barang/find-all?limit=10&offset=1`, {
 			method: 'GET',
@@ -40,6 +41,7 @@ const getData = async () => {
 				if (response.status === 200) {
 				const res = await response.json()
           dataBarang = res.data
+          console.log(dataBarang)
 				} else {
           await Swal.fire({
 						html: `
@@ -59,6 +61,8 @@ const getData = async () => {
         
 			});
 	};
+
+  // get all data suppliers
 const getSupplier = async () => {
 		fetch(`${url_api}/supplier/find-all?limit=10&offset=1`, {
 			method: 'GET',
@@ -91,6 +95,100 @@ const getSupplier = async () => {
         
 			});
 	};
+
+// delete Item
+
+// let id_item = '';
+
+const deleteItem = async (id) => {
+		fetch(`${url_api}/barang/delete/${id}`, {
+			method: 'DELETE',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		})
+			.then(async (response) => {
+				console.log(response);
+				if (response.status === 200) {
+				const res = await response.json()
+        await Swal.fire({
+						imageUrl: '/alertsucc.svg',
+						imageHeight: 130,
+						imageAlt: 'A tall image',
+						title: 'Success!',
+						text: 'Successfully deleted item',
+						confirmButtonColor: '#596066',
+						customClass: 'swal-height'
+					});
+          console.log(res)
+          location.reload()
+				} else {
+          await Swal.fire({
+						html: `
+				<div class="flex flex-col justify-center  h-full">
+					<img src="/alertfail.svg" width="150" height="150" class="mx-auto"/>
+					<h4 class="mb-0 mt-3 fw-semibold text-black">Oops!</h4>
+					<p class="mb-0 mt-2 fw-medium text-black">An error occurred while get data</p>
+				</div>
+			`,
+						confirmButtonColor: '#596066',
+						customClass: 'swal-height'
+					});
+				}
+			})
+			.catch(async (error) => {
+				console.log(error);
+        
+			});
+	};
+// delete supplier
+
+// let id_item = '';
+
+const deleteSupplier = async (id) => {
+		fetch(`${url_api}/supplier/delete/${id}`, {
+			method: 'DELETE',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		})
+			.then(async (response) => {
+				console.log(response);
+				if (response.status === 200) {
+				const res = await response.json()
+        await Swal.fire({
+						imageUrl: '/alertsucc.svg',
+						imageHeight: 130,
+						imageAlt: 'A tall image',
+						title: 'Success!',
+						text: 'Successfully deleted item',
+						confirmButtonColor: '#596066',
+						customClass: 'swal-height'
+					});
+          console.log(res)
+          location.reload()
+				} else {
+          await Swal.fire({
+						html: `
+				<div class="flex flex-col justify-center  h-full">
+					<img src="/alertfail.svg" width="150" height="150" class="mx-auto"/>
+					<h4 class="mb-0 mt-3 fw-semibold text-black">Oops!</h4>
+					<p class="mb-0 mt-2 fw-medium text-black">An error occurred while get data</p>
+				</div>
+			`,
+						confirmButtonColor: '#596066',
+						customClass: 'swal-height'
+					});
+				}
+			})
+			.catch(async (error) => {
+				console.log(error);
+        
+			});
+	};
+
+
+
 
 </script>
 
@@ -181,7 +279,7 @@ const getSupplier = async () => {
                   <td>{data.supplier?.namaSupplier}</td>
                   <td>{data.supplier?.alamat}</td>
                   <td>{data.supplier?.noTelp}</td>
-                  <td><button class="btn btn-error text-white">Hapus</button>
+                  <td><button class="btn btn-error text-white" on:click={deleteItem(data.id)}>Hapus</button>
                     <button class="btn btn-warning " on:click={goto(`/dashboard/${data.id}`)}>Update</button></td>
                 </tr>
                 {/each}
@@ -230,7 +328,7 @@ const getSupplier = async () => {
                   <td>{data.namaSupplier}</td>
                   <td>{data.alamat}</td>
                   <td>{data.noTelp}</td>
-                  <td><button class="btn btn-error text-white">Hapus</button>
+                  <td><button class="btn btn-error text-white" on:click={deleteSupplier(data.id)}>Hapus</button>
                     <button class="btn btn-warning " on:click={goto(`/dashboard/supplier/${data.id}`)}>Update</button></td>
                   
                 </tr>
