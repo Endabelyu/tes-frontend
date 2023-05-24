@@ -1,15 +1,96 @@
 
 <script>
+// @ts-nocheck
+
   
   import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+  import Swal from 'sweetalert2';
+
+
   let barang =true,
-  supplier=false,
   currentdate = new Date(),
+  dataBarang=[],
+  dataSupplier=[],
   date= currentdate.getFullYear()+ "/" + (currentdate.getMonth()+1) + "/" +currentdate.getDate(),
   time = currentdate.getHours() + ":"  
                 + currentdate.getMinutes() + ":" 
-                + currentdate.getSeconds();
+                + currentdate.getSeconds(),
+   usersname= '';
+                ;
 
+
+onMount(async () => {
+  await getData()  
+  await getSupplier()
+  usersname= localStorage.getItem('username');
+
+})
+let    url_api = import.meta.env.VITE_API_DIGITAL
+
+const getData = async () => {
+		fetch(`${url_api}/barang/find-all?limit=10&offset=1`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		})
+			.then(async (response) => {
+				console.log(response);
+				if (response.status === 200) {
+				const res = await response.json()
+          dataBarang = res.data
+				} else {
+          await Swal.fire({
+						html: `
+				<div class="flex flex-col justify-center  h-full">
+					<img src="/alertfail.svg" width="150" height="150" class="mx-auto"/>
+					<h4 class="mb-0 mt-3 fw-semibold text-black">Oops!</h4>
+					<p class="mb-0 mt-2 fw-medium text-black">An error occurred while get data</p>
+				</div>
+			`,
+						confirmButtonColor: '#596066',
+						customClass: 'swal-height'
+					});
+				}
+			})
+			.catch(async (error) => {
+				console.log(error);
+        
+			});
+	};
+const getSupplier = async () => {
+		fetch(`${url_api}/supplier/find-all?limit=10&offset=1`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		})
+			.then(async (response) => {
+				console.log(response);
+				if (response.status === 200) {
+				const res = await response.json()
+          dataSupplier = res.data
+          console.log(dataSupplier)
+				} else {
+          await Swal.fire({
+						html: `
+				<div class="flex flex-col justify-center  h-full">
+					<img src="/alertfail.svg" width="150" height="150" class="mx-auto"/>
+					<h4 class="mb-0 mt-3 fw-semibold text-black">Oops!</h4>
+					<p class="mb-0 mt-2 fw-medium text-black">An error occurred while get data</p>
+				</div>
+			`,
+						confirmButtonColor: '#596066',
+						customClass: 'swal-height'
+					});
+				}
+			})
+			.catch(async (error) => {
+				console.log(error);
+        
+			});
+	};
 
 </script>
 
@@ -20,7 +101,7 @@
           <img src="/woman.png" alt="profile" class="w-2/4 mx-auto">
         </div>
         <div class="bg-blue-300  text-center rounded-b-md w-full px-3 py-3 text-blue-900">
-          <h2>Nama</h2>
+          <h2>{usersname}</h2>
         </div>
       </div>
       <div class="shadow-lg">
@@ -89,38 +170,23 @@
               </thead>
               <tbody class="">
                 <!-- row 1 -->
+
+                {#each dataBarang as data,i}
+                   <!-- content here -->
                 <tr>
-                  <td>1</td>
-                  <td>Cy Ganderton</td>
-                  <td>Quality Control Specialist</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
+                  <td>{++i}</td>
+                  <td>{data.namaBarang}</td>
+                  <td>{data.stok}</td>
+                  <td>{data.harga}</td>
+                  <td>{data.supplier?.namaSupplier}</td>
+                  <td>{data.supplier?.alamat}</td>
+                  <td>{data.supplier?.noTelp}</td>
+                  <td><button class="btn btn-error text-white">Hapus</button>
+                    <button class="btn btn-warning " on:click={goto(`/dashboard/${data.id}`)}>Update</button></td>
                 </tr>
-                <!-- row 2 -->
-                <tr class="">
-                  <td>2</td>
-                  <td>Cy Ganderton</td>
-                  <td>Quality Control Specialist</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                </tr>
-                <!-- row 3 -->
-                <tr>
-                  <td>3</td>
-                  <td>Cy Ganderton</td>
-                  <td>Quality Control Specialist</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
-                </tr>
+                {/each}
+
+            
               </tbody>
             </table>
             <div class="flex justify-end">
@@ -157,32 +223,20 @@
               </thead>
               <tbody>
                 <!-- row 1 -->
+                {#each dataSupplier as data, i}
+                   <!-- content here -->
                 <tr>
-                  <td>1</td>
-                  <td>Cy Ganderton</td>
-                  <td>Quality Control Specialist</td>
-                  <td>Blue</td>
-                  <td>Blue</td>
+                  <td>{++i}</td>
+                  <td>{data.namaSupplier}</td>
+                  <td>{data.alamat}</td>
+                  <td>{data.noTelp}</td>
+                  <td><button class="btn btn-error text-white">Hapus</button>
+                    <button class="btn btn-warning " on:click={goto(`/dashboard/supplier/${data.id}`)}>Update</button></td>
                   
                 </tr>
-                <!-- row 2 -->
-                <tr class="">
-                  <td>2</td>
-                  <td>Cy Ganderton</td>
-                  <td>Quality Control Specialist</td>
-                  
-                  <td>Blue</td>
-                  <td>Blue</td>
-                </tr>
-                <!-- row 3 -->
-                <tr>
-                  <td>3</td>
-                  <td>Cy Ganderton</td>
-                  <td>Quality Control Specialist</td>
-                  
-                  <td>Blue</td>
-                  <td>Blue</td>
-                </tr>
+                {/each}
+                
+              
               </tbody>
             </table>
             <div class="flex justify-end">
