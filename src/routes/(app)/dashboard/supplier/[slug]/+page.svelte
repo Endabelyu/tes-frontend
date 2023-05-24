@@ -1,6 +1,90 @@
 <script>
   import { goto } from '$app/navigation';
-      let unRegister = false
+      import Swal from 'sweetalert2';
+import { onMount } from 'svelte';
+import { page } from '$app/stores';
+
+
+let id_supplier= $page.params.slug,
+dataSupplier= '',
+url_api = import.meta.env.VITE_API_DIGITAL,
+tokens= '';
+
+
+onMount(async () => {
+    // @ts-ignore
+tokens= localStorage.getItem('token')
+await getSupplier()
+  });
+
+// get data suppliers
+const getSupplier = async () => {
+		fetch(`${url_api}/supplier/find-by-id/${id_supplier}`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		})
+			.then(async (response) => {
+				console.log(response);
+				if (response.status === 200) {
+				const res = await response.json()
+          dataSupplier = res.data
+          console.log(dataSupplier)
+				} else {
+          await Swal.fire({
+						html: `
+				<div class="flex flex-col justify-center  h-full">
+					<img src="/alertfail.svg" width="150" height="150" class="mx-auto"/>
+					<h4 class="mb-0 mt-3 fw-semibold text-black">Oops!</h4>
+					<p class="mb-0 mt-2 fw-medium text-black">An error occurred while get data</p>
+				</div>
+			`,
+						confirmButtonColor: '#596066',
+						customClass: 'swal-height'
+					});
+				}
+			})
+			.catch(async (error) => {
+				console.log(error);
+        
+			});
+	};
+// update data suppliers
+const updateSupplier = async () => {
+		fetch(`${url_api}/supplier/update/${id_supplier}}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		})
+			.then(async (response) => {
+				console.log(response);
+				if (response.status === 200) {
+				const res = await response.json()
+          dataSupplier = res.data
+          console.log(dataSupplier)
+				} else {
+          await Swal.fire({
+						html: `
+				<div class="flex flex-col justify-center  h-full">
+					<img src="/alertfail.svg" width="150" height="150" class="mx-auto"/>
+					<h4 class="mb-0 mt-3 fw-semibold text-black">Oops!</h4>
+					<p class="mb-0 mt-2 fw-medium text-black">An error occurred while get data</p>
+				</div>
+			`,
+						confirmButtonColor: '#596066',
+						customClass: 'swal-height'
+					});
+				}
+			})
+			.catch(async (error) => {
+				console.log(error);
+        
+			});
+	};
+
+
   </script>
   
   
