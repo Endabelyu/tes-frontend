@@ -6,8 +6,11 @@
   import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
   import Swal from 'sweetalert2';
+	import Pagination from '../../../components/pagination.svelte';
+  import { get } from 'svelte/store';
 
-
+  let page = parseInt(1);
+	let total;
   let barang =true,
   currentdate = new Date(),
   dataBarang=[],
@@ -19,12 +22,15 @@
    usersname= '';
                 ;
 
-
+   
 onMount(async () => {
   await getData()  
   await getSupplier()
   usersname= localStorage.getItem('username');
-
+const token = localStorage.getItem('token')
+if(!token){
+    goto('/')
+  }
   new DataTable('#barang', {
 			bLengthChange: false,
 			paging: false,
@@ -53,7 +59,7 @@ onMount(async () => {
 			searching: true,
 			columnDefs: [
 				{
-					targets: [6],
+					targets: [5],
 					orderable: false,
 					width: '5%'
 				}
@@ -66,24 +72,29 @@ onMount(async () => {
 				"<'row'<'col-sm-12'tr>>" +
 				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
 		});
+   
 	});
 
 let    url_api = import.meta.env.VITE_API_DIGITAL
 
+
+const handlePageChange = (e) => {
+		page = e.detail;
+    getData()
+    getSupplier()
+	};
 // get all item data  
 const getData = async () => {
-		fetch(`${url_api}/barang/find-all?limit=10&offset=1`, {
+		fetch(`${url_api}/barang/find-all?limit=10&offset=${page}`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('token')}`
 			}
 		})
 			.then(async (response) => {
-				console.log(response);
 				if (response.status === 200) {
 				const res = await response.json()
           dataBarang = res.data
-          console.log(dataBarang)
 				} else {
           await Swal.fire({
 						html: `
@@ -106,7 +117,7 @@ const getData = async () => {
 
   // get all data suppliers
 const getSupplier = async () => {
-		fetch(`${url_api}/supplier/find-all?limit=10&offset=1`, {
+		fetch(`${url_api}/supplier/find-all?limit=10&offset=${page}`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -117,6 +128,8 @@ const getSupplier = async () => {
 				if (response.status === 200) {
 				const res = await response.json()
           dataSupplier = res.data
+          page=res.page
+          total=res.total_page
           console.log(dataSupplier)
 				} else {
           await Swal.fire({
@@ -329,16 +342,14 @@ const deleteSupplier = async (id) => {
             
               </tbody>
             </table>
-            <div class="flex justify-end">
-
-                <div class="btn-group ">
-                    <button class="btn">1</button>
-                    <button class="btn">2</button>
-                    <button class="btn btn-disabled">...</button>
-                    <button class="btn">99</button>
-                    <button class="btn">100</button>
-                </div>
+            <div class="div mt-3">
+              <Pagination
+                currentPage={page}
+                totalPages={total}
+                on:currentPageChange={handlePageChange}
+              />
             </div>
+
           </div>
         </div>
 
@@ -379,17 +390,15 @@ const deleteSupplier = async (id) => {
               
               </tbody>
             </table>
-            <div class="flex justify-end">
-
-                <div class="btn-group ">
-                    <button class="btn">1</button>
-                    <button class="btn">2</button>
-                    <button class="btn btn-disabled">...</button>
-                    <button class="btn">99</button>
-                    <button class="btn">100</button>
-                </div>
+            <div class="div mt-3">
+              <Pagination
+                currentPage={page}
+                totalPages={total}
+                on:currentPageChange={handlePageChange}
+              />
             </div>
-          </div>
+
+                      </div>
         </div>
         {/if}
 

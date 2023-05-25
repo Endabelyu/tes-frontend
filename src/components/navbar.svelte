@@ -1,5 +1,8 @@
 
 <script>
+// @ts-nocheck
+
+  
 </script>
 
 <div>
@@ -19,7 +22,6 @@
                 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                 <ul tabindex="0" class="menu dropdown-content p-2 shadow bg-blue-100 rounded-box w-52 mt-4">
                   <li><a href="/dashboard">Dashboard</a></li> 
-                  <li><a href="/supplier">List Supplier</a></li>
                 </ul>
               </div>
          
