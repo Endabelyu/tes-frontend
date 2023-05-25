@@ -38,11 +38,13 @@ if(!token){
 			searching: true,
 			columnDefs: [
 				{
-					targets: [8],
+					targets: [7],
 					orderable: false,
 					width: '5%'
 				}
-			],
+			], buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
 			language: {
 				searchPlaceholder: 'Search'
 			},
@@ -64,13 +66,17 @@ if(!token){
 					width: '5%'
 				}
 			],
+     
 			language: {
 				searchPlaceholder: 'Search'
 			},
 			dom:
-				"<'row'<'col-md-5'l><' col-md-5'f>>" +
+				"<'row'<'col-md-7'l><' col-md-5'f>>" +
 				"<'row'<'col-sm-12'tr>>" +
-				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
 		});
    
 	});
