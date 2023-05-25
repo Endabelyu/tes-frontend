@@ -53,7 +53,7 @@ onMount(async () => {
 			searching: true,
 			columnDefs: [
 				{
-					targets: [8],
+					targets: [6],
 					orderable: false,
 					width: '5%'
 				}
