@@ -25,7 +25,49 @@ onMount(async () => {
   await getSupplier()
   usersname= localStorage.getItem('username');
 
-})
+  new DataTable('#barang', {
+			bLengthChange: false,
+			paging: false,
+			ordering: false,
+			searching: true,
+			columnDefs: [
+				{
+					targets: [8],
+					orderable: false,
+					width: '5%'
+				}
+			],
+			language: {
+				searchPlaceholder: 'Search'
+			},
+			dom:
+				"<'row'<'col-md-5'l><' col-md-5'f>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+		});
+
+  new DataTable('#supplier', {
+			bLengthChange: false,
+			paging: false,
+			ordering: false,
+			searching: true,
+			columnDefs: [
+				{
+					targets: [8],
+					orderable: false,
+					width: '5%'
+				}
+			],
+			language: {
+				searchPlaceholder: 'Search'
+			},
+			dom:
+				"<'row'<'col-md-5'l><' col-md-5'f>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+		});
+	});
+
 let    url_api = import.meta.env.VITE_API_DIGITAL
 
 // get all item data  
@@ -192,7 +234,7 @@ const deleteSupplier = async (id) => {
 
 </script>
 
-<div class="h-[85vh] flex gap-6  py-4 px-8">
+<div class="h-[110vh] flex gap-6  py-4 px-8">
     <div class="w-[15%]">
       <div class="mb-2 shadow-lg">
         <div class=" rounded-t-lg border-2 py-4 rounded border-gray-200 w-full ">
@@ -252,7 +294,7 @@ const deleteSupplier = async (id) => {
                 <button class=" w-[8rem] bg-blue-700 text-sm px-2 py-2 capitalize rounded text-white add" on:click={() => goto('/add_items')}>Tambah Barang</button>
         </header>
         <div class="overflow-x-auto">
-            <table class="table w-full mb-4 shadow-md">
+            <table class="w-full" id="barang">
               <!-- head -->
               <thead class="">
                 <tr>
@@ -308,7 +350,7 @@ const deleteSupplier = async (id) => {
                   <button class=" w-[8rem] bg-blue-700 text-sm px-2 py-2 capitalize rounded text-white add"  on:click={() => goto('/add_supplier')}>Tambah Supplier</button>
           </header>
         <div class="overflow-x-auto">
-            <table class="table w-full mb-4 shadow-md">
+            <table class="w-full" id="supplier">
               <!-- head -->
               <thead class="">
                 <tr>
@@ -323,7 +365,7 @@ const deleteSupplier = async (id) => {
                 <!-- row 1 -->
                 {#each dataSupplier as data, i}
                    <!-- content here -->
-                <tr>
+                <tr class="">
                   <td>{++i}</td>
                   <td>{data.namaSupplier}</td>
                   <td>{data.alamat}</td>
